@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#ffffff" id="theme-color">
-  <title>Новогоднее поздравление</title>
+  <title>Новогоднее поздравление 2025</title>
   <style>
     body {
       margin: 0;
@@ -29,11 +29,12 @@
       padding: 15px 30px;
       font-size: 18px;
       cursor: pointer;
-      background: linear-gradient(to right, blue, gold);
-      color: #fff;
+      background: linear-gradient(to right, #0000FF50, #FFD70050);
+      color: green;
       border: none;
       border-radius: 5px;
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      
     }
 
     button:hover {
@@ -126,22 +127,23 @@
     @keyframes fall {
       0% {
         transform: translateY(-10vh) rotate(0deg);
-      }
+          }
       100% {
         transform: translateY(110vh) rotate(360deg);
       }
     }
+    
   </style>
 </head>
 <body>
   <button id="open-modal">Дорогие друзья!<br> Нажмите здесь, чтобы открыть поздравление с Новым Годом!</button>
 
-  <div class="modal" id="modal" id="close-modal">
+  <div class="modal" id="modal">
     <div class="modal-content" id="modal-content">
-      <button class="close" id="close-modal">&#10060;</button>
+      <!--button class="close" id="close-modal">&#10060;</button-->
 
       <div class="inner-modal" id="inner-modal">
-             
+              <button class="close" id="close-modal">&#10060;</button>     
         <h1>С Новым Годом!</h1>
         <h2>Пусть этот Новый 2025 год принесет вам счастье, здоровье, удачу и исполнение всех желаний!</h2>
       </div>
