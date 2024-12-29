@@ -8,7 +8,7 @@
   <style>
     body {
       margin: 0;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-family: 'Georgia', cursive, sans-serif;
       background-color: #ffffff;
       display: flex;
       justify-content: center;
@@ -136,7 +136,7 @@
 <body>
   <button id="open-modal">Дорогие друзья!<br> Нажмите здесь, чтобы открыть поздравление с Новым Годом!</button>
 
-  <div class="modal" id="modal">
+  <div class="modal" id="modal" id="close-modal">
     <div class="modal-content" id="modal-content">
       <button class="close" id="close-modal">&#10060;</button>
 
@@ -233,7 +233,10 @@
       item.classList.add('animation-item');
       item.textContent = items[Math.floor(Math.random() * items.length)];
       item.style.left = `${Math.random() * 100}%`;
-      item.style.animationDuration = `${Math.random() * 3 + 2}s`;
+      item.style.animationDuration = `${Math.random() * 2 + 4}s`;
+      item.style.left = `${Math.random() * 100}%`;
+      item.style.fontSize = `${Math.random() * 2.5 + 0.5}em`; // Размер от 0.5em до 2em
+  
       item.style.color = colors[Math.floor(Math.random() * colors.length)];
       modalContent.appendChild(item);
 
