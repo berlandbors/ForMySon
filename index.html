@@ -1,1 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff" id="theme-color">
+  <title>Новогоднее поздравление</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    h2 {
+      color: blue;
+      text-shadow: 0 4px 10px rgba(0, 50, 150, 0.7);
+    }
+    
+    h1 {
+      text-shadow: 0 4px 10px rgba(255, 215, 0, 0.7);
+    }
 
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      background: linear-gradient(to right, blue, gold);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+      background-color: #1e90ff;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(10, 50, 100, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      position: relative;
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      height: 90%;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      background-color: #FFFFFF30;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      background-color: #ff6347;
+    }
+
+    .inner-modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.7);
+      border: 2px solid #ffffff;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+    }
+
+    .inner-modal h1 {
+      font-size: 2em;
+      background-image: linear-gradient(90deg, #ff0000, #ffd700, #00ff00, #1e90ff, #ff69b4);
+      background-size: 400%;
+      color: transparent;
+      -webkit-background-clip: text;
+      animation: gradient-animation 5s infinite alternate;
+    }
+
+    @keyframes gradient-animation {
+      0% {
+        background-position: 0%;
+      }
+      100% {
+        background-position: 100%;
+      }
+    }
+
+    .animation-item {
+      position: absolute;
+      top: -10px;
+      font-size: 2em;
+      animation: fall 5s linear infinite, sizeChange 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
+    @keyframes sizeChange {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="open-modal">Дорогие друзья!<br> Нажмите здесь, чтобы открыть поздравление с Новым Годом!</button>
+
+  <div class="modal" id="modal">
+    <div class="modal-content" id="modal-content">
+      <button class="close" id="close-modal">&#10060;</button>
+
+      <div class="inner-modal" id="inner-modal">
+        <h1>С Новым Годом!</h1>
+        <h2>Пусть этот Новый 2025 год принесет вам счастье, здоровье, удачу и исполнение всех желаний!</h2>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const melody = [
+      { note: 'C5', duration: 400 },
+      { note: 'G4', duration: 400 },
+      { note: 'A4', duration: 400 },
+      { note: 'G4', duration: 800 },
+      { note: 'F4', duration: 400 },
+      { note: 'E4', duration: 400 },
+      { note: 'F4', duration: 800 },
+      { note: 'G4', duration: 400 },
+      { note: 'E4', duration: 400 },
+      { note: 'C4', duration: 800 },
+    ];
+
+    const notesFrequency = {
+      C4: 261.63,
+      D4: 293.66,
+      E4: 329.63,
+      F4: 349.23,
+      G4: 392.00,
+      A4: 440.00,
+      B4: 493.88,
+      C5: 523.25,
+    };
+
+    let audioContext;
+    let isPlaying = false;
+    let melodyInterval;
+
+    function playMelody() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      let currentTime = audioContext.currentTime;
+
+      melody.forEach((note) => {
+        if (note.note in notesFrequency) {
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+
+          oscillator.frequency.value = notesFrequency[note.note];
+          oscillator.type = 'triangle';
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+
+          gainNode.gain.setValueAtTime(0, currentTime);
+          gainNode.gain.linearRampToValueAtTime(0.2, currentTime + 0.05);
+          gainNode.gain.linearRampToValueAtTime(0, currentTime + note.duration / 1000);
+
+          oscillator.start(currentTime);
+          oscillator.stop(currentTime + note.duration / 1000);
+
+          currentTime += note.duration / 1000;
+        }
+      });
+
+      if (!melodyInterval) {
+        melodyInterval = setInterval(playMelody, melody.reduce((sum, note) => sum + note.duration, 0));
+      }
+    }
+
+    function stopMelody() {
+      if (melodyInterval) {
+        clearInterval(melodyInterval);
+        melodyInterval = null;
+      }
+
+      if (audioContext) {
+        audioContext.close();
+        audioContext = null;
+      }
+    }
+
+    let animationInterval;
+    let colorInterval;
+
+    const items = ['', '🎆', '🎉', '🎊', '🎈'];
+    const colors = ['#ff4500', '#ff6347', '#ffd700', '#00ff7f', '#1e90ff'];
+
+    function createAnimationItem(modalContent) {
+  const item = document.createElement('div');
+  item.classList.add('animation-item');
+  item.textContent = items[Math.floor(Math.random() * items.length)];
+
+  // Установка случайного начального положения и размеров
+  item.style.left = `${Math.random() * 100}%`;
+  item.style.fontSize = `${Math.random() * 1.5 + 0.5}em`; // Размер от 0.5em до 2em
+
+  // Установка случайной длительности падения
+  const fallDuration = Math.random() * 3 + 2; // От 2 до 5 секунд
+  item.style.animationDuration = `${fallDuration}s`;
+
+  // Добавление цвета из массива
+  item.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+  // Добавление элемента в модальное окно
+  modalContent.appendChild(item);
+
+  // Удаление элемента после завершения анимации
+  item.addEventListener('animationend', () => {
+    item.remove();
+  });
+}
+
+    function flashBackgroundWithVibration(modalContent) {
+      let colorIndex = 0;
+      colorInterval = setInterval(() => {
+        const themeColor = document.getElementById('theme-color');
+        modalContent.style.backgroundColor = colors[colorIndex];
+        themeColor.setAttribute('content', colors[colorIndex]);
+        navigator.vibrate(200);
+        colorIndex = (colorIndex + 1) % colors.length;
+      }, 1000);
+    }
+
+    function startCelebration() {
+  const modalContent = document.getElementById('modal-content');
+  animationInterval = setInterval(() => {
+    createAnimationItem(modalContent);
+  }, 300); // Добавляем новый элемент каждые 300 мс
+  flashBackgroundWithVibration(modalContent); // Мигающий фон
+  if (!isPlaying) {
+    isPlaying = true;
+    playMelody();
+  }
+}
+
+    function stopCelebration() {
+      clearInterval(animationInterval);
+      clearInterval(colorInterval);
+      animationInterval = null;
+      colorInterval = null;
+
+      const modalContent = document.getElementById('modal-content');
+      modalContent.style.backgroundColor = '#ffffff';
+      document.getElementById('theme-color').setAttribute('content', '#ffffff');
+      navigator.vibrate(0);
+      modalContent.querySelectorAll('.animation-item').forEach((item) => item.remove());
+
+      stopMelody();
+      isPlaying = false;
+    }
+
+    const openModal = document.getElementById('open-modal');
+    const closeModal = document.getElementById('close-modal');
+    const modal = document.getElementById('modal');
+
+    openModal.addEventListener('click', () => {
+      modal.style.display = 'flex';
+      startCelebration();
+    });
+
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+      stopCelebration();
+    });
+  </script>
+</body>
+</html>
