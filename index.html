@@ -120,24 +120,15 @@
       position: absolute;
       top: -10px;
       font-size: 2em;
-      animation: fall 5s linear infinite, sizeChange 3s ease-in-out infinite alternate;
+      animation: fall 5s linear infinite;
     }
 
     @keyframes fall {
-  0% {
-    transform: translateY(-10vh) rotate(0deg);
-  }
-  100% {
-    transform: translateY(110vh) rotate(360deg);
-  }
-}
-
-    @keyframes sizeChange {
       0% {
-        transform: scale(1);
+        transform: translateY(-10vh) rotate(0deg);
       }
       100% {
-        transform: scale(1.5);
+        transform: translateY(110vh) rotate(360deg);
       }
     }
   </style>
@@ -150,6 +141,7 @@
       <button class="close" id="close-modal">&#10060;</button>
 
       <div class="inner-modal" id="inner-modal">
+             
         <h1>С Новым Годом!</h1>
         <h2>Пусть этот Новый 2025 год принесет вам счастье, здоровье, удачу и исполнение всех желаний!</h2>
       </div>
@@ -233,33 +225,22 @@
     let animationInterval;
     let colorInterval;
 
-    const items = ['', '🎆', '🎉', '🎊', '🎈'];
+    const items = ['🎅', '2025', '🎉', '🎄', '🎈', '❄️', 'С новым годом!'];
     const colors = ['#ff4500', '#ff6347', '#ffd700', '#00ff7f', '#1e90ff'];
 
     function createAnimationItem(modalContent) {
-  const item = document.createElement('div');
-  item.classList.add('animation-item');
-  item.textContent = items[Math.floor(Math.random() * items.length)];
+      const item = document.createElement('div');
+      item.classList.add('animation-item');
+      item.textContent = items[Math.floor(Math.random() * items.length)];
+      item.style.left = `${Math.random() * 100}%`;
+      item.style.animationDuration = `${Math.random() * 3 + 2}s`;
+      item.style.color = colors[Math.floor(Math.random() * colors.length)];
+      modalContent.appendChild(item);
 
-  // Установка случайного начального положения и размеров
-  item.style.left = `${Math.random() * 100}%`;
-  item.style.fontSize = `${Math.random() * 1.5 + 0.5}em`; // Размер от 0.5em до 2em
-
-  // Установка случайной длительности падения
-  const fallDuration = Math.random() * 3 + 2; // От 2 до 5 секунд
-  item.style.animationDuration = `${fallDuration}s`;
-
-  // Добавление цвета из массива
-  item.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-  // Добавление элемента в модальное окно
-  modalContent.appendChild(item);
-
-  // Удаление элемента после завершения анимации
-  item.addEventListener('animationend', () => {
-    item.remove();
-  });
-}
+      item.addEventListener('animationend', () => {
+        item.remove();
+      });
+    }
 
     function flashBackgroundWithVibration(modalContent) {
       let colorIndex = 0;
@@ -273,16 +254,16 @@
     }
 
     function startCelebration() {
-  const modalContent = document.getElementById('modal-content');
-  animationInterval = setInterval(() => {
-    createAnimationItem(modalContent);
-  }, 300); // Добавляем новый элемент каждые 300 мс
-  flashBackgroundWithVibration(modalContent); // Мигающий фон
-  if (!isPlaying) {
-    isPlaying = true;
-    playMelody();
-  }
-}
+      const modalContent = document.getElementById('modal-content');
+      animationInterval = setInterval(() => {
+        createAnimationItem(modalContent);
+      }, 300);
+      flashBackgroundWithVibration(modalContent);
+      if (!isPlaying) {
+        isPlaying = true;
+        playMelody();
+      }
+    }
 
     function stopCelebration() {
       clearInterval(animationInterval);
