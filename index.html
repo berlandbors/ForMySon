@@ -1,304 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#ffffff" id="theme-color">
-  <title>Новогоднее поздравление 2025</title>
+  <title>С Днём Рождения, Даник!</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Georgia', cursive, sans-serif;
-      background-color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 0;
+      background: linear-gradient(to bottom, #1e3c72, #2a5298);
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: white;
+      text-align: center;
     }
-    
-    h2 {
-      color: blue;
-      text-shadow: 0 4px 10px rgba(0, 50, 150, 0.7);
-    }
-    
+
     h1 {
-      text-shadow: 0 4px 10px rgba(255, 215, 0, 0.7);
+      font-size: 3em;
+      margin-top: 60px;
     }
 
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      cursor: pointer;
-      background: linear-gradient(to right, #0000FF50, #FFD70050);
-      color: green;
+    .start-btn {
+      background: #ff4081;
       border: none;
-      border-radius: 5px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-      
+      color: white;
+      font-size: 1.5em;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 0 20px #ff4081;
+      transition: transform 0.2s ease;
     }
 
-    button:hover {
-      background-color: #1e90ff;
+    .start-btn:hover {
+      transform: scale(1.05);
     }
 
-    .modal {
-      display: none;
+    #message {
+      margin-top: 50px;
+      font-size: 1.5em;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    canvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(10, 50, 100, 0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
+      pointer-events: none;
     }
-
-    .modal-content {
-      position: relative;
-      background-color: #ffffff;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
-      height: 90%;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 10px 20px;
-      background-color: #FFFFFF30;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .close:hover {
-      background-color: #ff6347;
-    }
-
-    .inner-modal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(255, 255, 255, 0.7);
-      border: 2px solid #ffffff;
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-      width: 80%;
-      max-width: 400px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      z-index: 2000;
-    }
-
-    .inner-modal h1 {
-      font-size: 2em;
-      background-image: linear-gradient(90deg, #ff0000, #ffd700, #00ff00, #1e90ff, #ff69b4);
-      background-size: 400%;
-      color: transparent;
-      -webkit-background-clip: text;
-      animation: gradient-animation 5s infinite alternate;
-    }
-
-    @keyframes gradient-animation {
-      0% {
-        background-position: 0%;
-      }
-      100% {
-        background-position: 100%;
-      }
-    }
-
-    .animation-item {
-      position: absolute;
-      top: -10px;
-      font-size: 2em;
-      animation: fall 5s linear infinite;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(-10vh) rotate(0deg);
-          }
-      100% {
-        transform: translateY(110vh) rotate(360deg);
-      }
-    }
-    
   </style>
 </head>
 <body>
-  <button id="open-modal">Дорогие друзья!<br> Нажмите здесь, чтобы открыть поздравление с Новым Годом!</button>
 
-  <div class="modal" id="modal">
-    <div class="modal-content" id="modal-content">
-      <!--button class="close" id="close-modal">&#10060;</button-->
+  <h1>С Днём Рождения, Даник! 🎉</h1>
+  <button class="start-btn" onclick="startCelebration()">Запустить поздравление 🎵</button>
 
-      <div class="inner-modal" id="inner-modal">
-              <button class="close" id="close-modal">&#10060;</button>     
-        <h1>С Новым Годом!</h1>
-        <h2>Пусть этот Новый 2025 год принесет вам счастье, здоровье, удачу и исполнение всех желаний!</h2>
-      </div>
-    </div>
-  </div>
+  <div id="message"></div>
+
+  <canvas id="canvas"></canvas>
+  <audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2023/03/03/audio_51273fb91f.mp3?filename=happy-birthday-to-you-133214.mp3"></audio>
 
   <script>
-    const melody = [
-      { note: 'C5', duration: 400 },
-      { note: 'G4', duration: 400 },
-      { note: 'A4', duration: 400 },
-      { note: 'G4', duration: 800 },
-      { note: 'F4', duration: 400 },
-      { note: 'E4', duration: 400 },
-      { note: 'F4', duration: 800 },
-      { note: 'G4', duration: 400 },
-      { note: 'E4', duration: 400 },
-      { note: 'C4', duration: 800 },
-    ];
-
-    const notesFrequency = {
-      C4: 261.63,
-      D4: 293.66,
-      E4: 329.63,
-      F4: 349.23,
-      G4: 392.00,
-      A4: 440.00,
-      B4: 493.88,
-      C5: 523.25,
-    };
-
-    let audioContext;
-    let isPlaying = false;
-    let melodyInterval;
-
-    function playMelody() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      }
-
-      let currentTime = audioContext.currentTime;
-
-      melody.forEach((note) => {
-        if (note.note in notesFrequency) {
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
-
-          oscillator.frequency.value = notesFrequency[note.note];
-          oscillator.type = 'triangle';
-          oscillator.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-
-          gainNode.gain.setValueAtTime(0, currentTime);
-          gainNode.gain.linearRampToValueAtTime(0.2, currentTime + 0.05);
-          gainNode.gain.linearRampToValueAtTime(0, currentTime + note.duration / 1000);
-
-          oscillator.start(currentTime);
-          oscillator.stop(currentTime + note.duration / 1000);
-
-          currentTime += note.duration / 1000;
-        }
-      });
-
-      if (!melodyInterval) {
-        melodyInterval = setInterval(playMelody, melody.reduce((sum, note) => sum + note.duration, 0));
-      }
-    }
-
-    function stopMelody() {
-      if (melodyInterval) {
-        clearInterval(melodyInterval);
-        melodyInterval = null;
-      }
-
-      if (audioContext) {
-        audioContext.close();
-        audioContext = null;
-      }
-    }
-
-    let animationInterval;
-    let colorInterval;
-
-    const items = ['🎅', '2025', '🎉', '🎄', '🎈', '❄️', 'С новым годом!'];
-    const colors = ['#ff4500', '#ff6347', '#ffd700', '#00ff7f', '#1e90ff'];
-
-    function createAnimationItem(modalContent) {
-      const item = document.createElement('div');
-      item.classList.add('animation-item');
-      item.textContent = items[Math.floor(Math.random() * items.length)];
-      item.style.left = `${Math.random() * 100}%`;
-      item.style.animationDuration = `${Math.random() * 2 + 4}s`;
-      item.style.left = `${Math.random() * 100}%`;
-      item.style.fontSize = `${Math.random() * 2.5 + 0.5}em`; // Размер от 0.5em до 2em
-  
-      item.style.color = colors[Math.floor(Math.random() * colors.length)];
-      modalContent.appendChild(item);
-
-      item.addEventListener('animationend', () => {
-        item.remove();
-      });
-    }
-
-    function flashBackgroundWithVibration(modalContent) {
-      let colorIndex = 0;
-      colorInterval = setInterval(() => {
-        const themeColor = document.getElementById('theme-color');
-        modalContent.style.backgroundColor = colors[colorIndex];
-        themeColor.setAttribute('content', colors[colorIndex]);
-        navigator.vibrate(200);
-        colorIndex = (colorIndex + 1) % colors.length;
-      }, 1000);
-    }
+    const message = `Привет, наш любимы Сынок Даник! 🎈<br><br>
+      Сегодня тебе 10 лет, и это твой день!<br>
+      Желаю тебе веселья, улыбок и счастья! 😊<br>
+      Пусть каждый день будет как праздник,<br>
+      а мечты исполняются одна за другой! 🚀<br><br>
+      Ты наш герой, наш чемпион! 🏆<br><br>
+      С любовью — твой папа ❤️`;
 
     function startCelebration() {
-      const modalContent = document.getElementById('modal-content');
-      animationInterval = setInterval(() => {
-        createAnimationItem(modalContent);
-      }, 300);
-      flashBackgroundWithVibration(modalContent);
-      if (!isPlaying) {
-        isPlaying = true;
-        playMelody();
+      document.querySelector('.start-btn').style.display = 'none';
+      const msg = document.getElementById('message');
+      msg.innerHTML = message;
+      msg.style.opacity = 1;
+      document.getElementById('bg-music').play();
+      launchFireworks();
+    }
+
+    // Простая анимация фейерверков на canvas
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function createParticle(x, y) {
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x,
+          y,
+          radius: Math.random() * 2 + 1,
+          color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+          dx: (Math.random() - 0.5) * 6,
+          dy: (Math.random() - 0.5) * 6,
+          life: 100
+        });
       }
     }
 
-    function stopCelebration() {
-      clearInterval(animationInterval);
-      clearInterval(colorInterval);
-      animationInterval = null;
-      colorInterval = null;
-
-      const modalContent = document.getElementById('modal-content');
-      modalContent.style.backgroundColor = '#ffffff';
-      document.getElementById('theme-color').setAttribute('content', '#ffffff');
-      navigator.vibrate(0);
-      modalContent.querySelectorAll('.animation-item').forEach((item) => item.remove());
-
-      stopMelody();
-      isPlaying = false;
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.dx;
+        p.y += p.dy;
+        p.life--;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      requestAnimationFrame(animateParticles);
     }
 
-    const openModal = document.getElementById('open-modal');
-    const closeModal = document.getElementById('close-modal');
-    const modal = document.getElementById('modal');
-
-    openModal.addEventListener('click', () => {
-      modal.style.display = 'flex';
-      startCelebration();
-    });
-
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-      stopCelebration();
-    });
+    function launchFireworks() {
+      setInterval(() => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height / 2;
+        createParticle(x, y);
+      }, 700);
+      animateParticles();
+    }
   </script>
 </body>
 </html>
